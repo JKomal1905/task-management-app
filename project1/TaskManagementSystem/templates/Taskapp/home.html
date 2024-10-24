@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Task App</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+<body>
+<h3 class="text-center bg-dark text-white p-1">Task Management System
+    <button class="btn btn-primary btn-sm mx-1">Total Task:{{ total_no_task }}</button>
+    <button class="btn btn-primary btn-sm mx-1">Incompleted Task{{ total_no_task }}</button>
+    <button class="btn btn-primary btn-sm mx-1">Completed_Task{{total_no_task}}</button>
+    <a href="{% url 'remove_all' %}" class="btn btn-danger btn-sm mx-1">Remove all tasks</a>
+</h3>
+    <div class="container-fluid text-center">
+        <div class="row">
+            <div class="col-3">
+                <div class="card">
+                    <h5 class="card-header bg-primary text-white">Add Task</h5>
+                    <div class="card-body">
+                        <form action="{% url 'add_task' %}" method="POST">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="addtask" class="form-label">Enter your task details</label>
+                                <input type="text" class="form-control" id="addtask" name="add_task">
+                            </div>
+                            <button type="reset" class="btn btn-dark btn-sm">Reset</button>
+                            <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-5">
+                <div class="card">
+                    <h5 class="card-header bg-warning">Incomplete Task <a href="{% url 'delete_all' %}" class="btn btn-danger btn-sm">Delete All</a></h5>
+                    <div class="card-body">
+                        {% if len_incomplete_task == 0 %}
+                        <p>No record found</p>
+                        {% else %}
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">SL NO.</th>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">TASK NAME</th>
+                                    <th scope="col">ACTION</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for i in incomplete_task %}
+                                <tr>
+                                    <th scope="row">{{ forloop.counter }}</th>
+                                    <td>{{ i.id }}</td>
+                                    <td>{{ i.Task_name }}</td>
+                                    <td>
+                                    <a href="{% url 'task_done' i.id %}" class="btn btn-primary btn-sm">Done</a>
+                                        <a href="{% url 'update_task_view' i.id %}" class="btn btn-warning btn-sm">Update</a>
+                                        <a href="{% url 'task_delete' i.id %}" class="btn btn-danger btn-sm">Delete</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card">
+                <div class="card">
+                    <h5 class="card-header bg-success text-white">Completed Task
+                        <a href="{% url 'clear_all' %}" class="btn btn-danger btn-sm">Clear All</a>
+                    </h5>
+                    <div class="card-body">
+                    {% if len_completed_task == 0 %}
+                    <p>No completed tasks found.</p>
+                    {% else %}
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Sl No.</th>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">Task Name</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                                {% for i in completed_task %}
+                                <tr>
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ i.id }}</td>
+                                    <td>{{ i.Task_name }}</td>
+                                    <td>
+                                        <a href="{% url 'task_undo' i.id %}" class="btn btn-success btn-sm">Undo</a>
+                                        <a href="{% url 'task_clear' i.id %}" class="btn btn-danger btn-sm">Clear</a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        
+                        
+                        {% endif %}
+                    </div>
+                </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>
